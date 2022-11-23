@@ -2,7 +2,7 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import Logger from './logs';
 
-const atlasDBConnection = async () => {
+export const atlasDBConnection = async () => {
     try {
         await mongoose.connect(process.env.ATLAS_URL as string);
         Logger.info('Conectado com sucesso ao Atlas !');
@@ -14,4 +14,14 @@ const atlasDBConnection = async () => {
     }
 };
 
-export default atlasDBConnection;
+export const atlasTestDBConnection = async () => {
+    try {
+        await mongoose.connect(process.env.TEST_ATLAS_URL as string);
+        Logger.info('Conectado com sucesso ao Atlas de TESTE !!');
+    }
+    catch (error: any) {
+        Logger.error(error);
+        Logger.error('Não foi possível conectar ao Atlas de TESTE !!');
+        process.exit(1);
+    }
+};

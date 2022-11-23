@@ -1,5 +1,5 @@
 import { app } from "./app";
-import atlasDBConnection from "./config/database";
+import { atlasDBConnection } from "./config/database";
 import Logger from "./config/logs";
 
 const host = process.env.HOST_URL;
