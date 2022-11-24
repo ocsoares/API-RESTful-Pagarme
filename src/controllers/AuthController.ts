@@ -8,6 +8,8 @@ import { UserModel } from '../models/UserModel';
 import bcrypt from 'bcrypt';
 import { IUserAccount } from '../@types/interfaces';
 
+// TALVEZ mudar o Login por Basic Auth !!!!! <<<
+
 export class AuthController {
     static async register(req: Request, res: Response, next: NextFunction): Promise<Response> {
         const { username, password, confirm_password }: IUserAccount = req.body;
