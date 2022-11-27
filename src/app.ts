@@ -5,6 +5,7 @@ import cors from 'cors';
 import morganMiddleware from './middleware/validation/morganMiddleware';
 import { errorAPIMiddleware, pageNotFound } from './middleware/errorAPIMiddleware';
 import authRoute from './routes/authRoute';
+import transactionRoute from './routes/transactionRoute';
 
 // OBS: Tive que separar assim por causa dos Testes !!
 
@@ -17,7 +18,8 @@ app.use(cors());
 app.use(morganMiddleware);
 
 app.use('/api/',
-    authRoute
+    authRoute,
+    transactionRoute
 );
 
 app.use(pageNotFound);

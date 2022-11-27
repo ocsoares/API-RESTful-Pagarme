@@ -1,4 +1,5 @@
-import { BadRequestErrorMessages } from "../@types/errorAPIMessages";
+import { StatusCodes } from "http-status-codes";
+import { BadRequestErrorMessages, UnauthorizedErrorMessages } from "../@types/errorAPIMessages";
 
 export class ErrorAPIHelper extends Error {
     public readonly statusCode: number;
@@ -13,8 +14,16 @@ export class ErrorAPIHelper extends Error {
 // FAZER um ENUM para as Strings válidas que podem ser passadas como Parâmetro !!
 export class BadRequestAPIError extends ErrorAPIHelper {
     constructor(message: BadRequestErrorMessages) {
-        super(message, 400);
+        super(message, StatusCodes.BAD_REQUEST);
 
         this.name = 'Bad Request';
+    }
+}
+
+export class UnauthorizedAPIError extends ErrorAPIHelper {
+    constructor(message: UnauthorizedErrorMessages) {
+        super(message, StatusCodes.UNAUTHORIZED);
+
+        this.name = 'Unauthorized';
     }
 }

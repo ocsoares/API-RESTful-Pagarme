@@ -3,8 +3,6 @@
  * https://jestjs.io/docs/configuration
  */
 
-// import * from './dist/test/setup-jest.js'
-
 export default {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -22,7 +20,12 @@ export default {
   collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  // collectCoverageFrom: undefined,
+  collectCoverageFrom: [
+    "./src/**",
+    "!./src/config/**",
+    "!./src/helpers/**",
+    "!./src/@types/**"
+  ],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
