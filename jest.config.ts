@@ -3,12 +3,14 @@
  * https://jestjs.io/docs/configuration
  */
 
+// import * from './dist/test/setup-jest.js'
+
 export default {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
   // Stop running tests after `n` failures
-  // bail: 0,
+  bail: true,
 
   // The directory where Jest should store its cached dependency information
   // cacheDirectory: "C:\\Users\\caua_\\AppData\\Local\\Temp\\jest",
@@ -135,7 +137,9 @@ export default {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
+  setupFilesAfterEnv: [
+    "<rootDir>/dist/config/setup-jest.js"
+  ],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -191,5 +195,6 @@ export default {
 
   // Whether to use watchman for file crawling
   // watchman: true,
-  // testTimeout: 30000 // Tinha feito porque tava dando erro, mas parou !!
+  // testTimeout: 100000, // Tinha feito porque tava dando erro, mas parou !!
+  testSequencer: "./dist/config/test-sequencer.js"
 };

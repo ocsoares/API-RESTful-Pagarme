@@ -25,3 +25,15 @@ export const atlasTestDBConnection = async () => {
         process.exit(1);
     }
 };
+
+export const cleanTestDBConnection = async () => {
+    try {
+        await mongoose.connection.dropDatabase();
+        Logger.info('Banco de dados deletado com sucesso !');
+    }
+    catch (error: any) {
+        Logger.error(error);
+        Logger.error('Não foi possível deletar o banco de daods ');
+        process.exit(1);
+    }
+};
