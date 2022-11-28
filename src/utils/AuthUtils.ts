@@ -37,7 +37,7 @@ export class AuthUtils {
         return JWT;
     }
 
-    static checkJWT(token: string, JWT_key: string): JwtPayload | boolean {
+    static checkJWT(token: string, JWT_key: string): JwtPayload | false {
         try {
             const checkJWT = jwt.verify(token, JWT_key);
 

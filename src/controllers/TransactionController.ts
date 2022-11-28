@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ITransaction } from '../@types/interfaces';
+import { TransactionModel } from '../models/TransactionModel';
 import { staticInterfaceMethods } from '../utils/staticInterfaceMethodsUtils';
 
 interface ITransactionMethods {
@@ -19,16 +20,22 @@ export class TransactionController {
             cvv
         }: ITransaction = req.body;
 
-        console.log({
-            value,
-            description,
-            payment_method,
-            card_number,
-            card_holder,
-            card_expiration_date,
-            cvv
-        });
+        const lastForDigitsCard = card_number.slice(12, 16);
 
-        return res.status(200);
+        // const newTransfer = new TransactionModel({
+        //     value,
+        //     description,
+        //     payment_method,
+        //     card_number: lastForDigitsCard,
+        //     card_holder,
+        //     card_expiration_date, // NÃO sei se devo armazenar isso, ou armazenar e ENCRIPTAR... !! <<
+        // });
+
+        // await newTransfer.save();
+
+        return res.json({
+            message: 'Transation done !',
+            // newTransfer
+        });
     }
 }

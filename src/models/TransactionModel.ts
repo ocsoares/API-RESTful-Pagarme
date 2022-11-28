@@ -8,7 +8,6 @@ export const TransactionModel = mongoose.model('transactions', new Schema<ITrans
     card_number: { type: String, required: true, unique: true },
     card_holder: { type: String, required: true },
     card_expiration_date: { type: String, required: true },
-    cvv: { type: Number, required: true }
 },
     {
         timestamps: true

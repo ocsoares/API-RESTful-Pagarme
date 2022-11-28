@@ -19,7 +19,7 @@ export interface ITransaction {
     card_number: string;
     card_holder: string;
     card_expiration_date: string;
-    cvv: number;
+    cvv?: number;
 }
 
 export interface IPayableModel {
