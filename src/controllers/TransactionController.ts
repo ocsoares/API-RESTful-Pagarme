@@ -39,24 +39,14 @@ export class TransactionController {
 
         await newTransfer.save();
 
-        console.log('ID SEM _:', newTransfer.id);
-        console.log('ID com _:', newTransfer._id);
-
         Logger.info(`Transação realizada com o cartão de final ${lastForDigitsCard} !`);
 
+        // TESTAR sem o console.log() DEPOIS APAGAR esse Comentário... !!!! <<<<
         if (newTransfer.payment_method === 'credit_card') {
-            const newPayableCreditCard = await TransactionUtils.savePayableCreditCard(
-                newTransfer.id
-            );
-
-            console.log('PAYABLE CREDIT:', newPayableCreditCard);
+            await TransactionUtils.savePayableCreditCard(newTransfer.id);
         }
         else {
-            const newPayableDebitCard = await TransactionUtils.savePayableDebitCard(
-                newTransfer.id
-            );
-
-            console.log('PAYABLE DEBIT:', newPayableDebitCard);
+            await TransactionUtils.savePayableDebitCard(newTransfer.id);
         }
 
         return res.status(StatusCodes.ACCEPTED).json({

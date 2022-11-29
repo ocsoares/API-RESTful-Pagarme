@@ -1,4 +1,5 @@
 import { IPayableModel } from "../@types/interfaces";
+import Logger from "../config/logs";
 import { PayableModel } from "../models/PayableModel";
 import { staticInterfaceMethods } from '../utils/staticInterfaceMethodsUtils';
 
@@ -20,6 +21,10 @@ export class TransactionUtils {
 
         await newPayable.save();
 
+        Logger.info(
+            `Payable no cartão de crédito gerado para a transferência '${newPayable.idTransfer}' !`
+        );
+
         return newPayable;
     };
 
@@ -31,6 +36,10 @@ export class TransactionUtils {
         });
 
         await newPayable.save();
+
+        Logger.info(
+            `Payable no cartão de débito gerado para a transferência '${newPayable.idTransfer}'`
+        );
 
         return newPayable;
     };
