@@ -8,7 +8,7 @@ export default {
   // automock: false,
 
   // Stop running tests after `n` failures
-  bail: true,
+  bail: false,
 
   // The directory where Jest should store its cached dependency information
   // cacheDirectory: "C:\\Users\\caua_\\AppData\\Local\\Temp\\jest",
@@ -24,7 +24,12 @@ export default {
     "./src/**",
     "!./src/config/**",
     "!./src/helpers/**",
-    "!./src/@types/**"
+    "!./src/@types/**",
+    "!./src/app.ts",
+    "!./src/server.ts",
+    "!./src/middleware/validation/**",
+    "!./src/models/**",
+    "!./src/routes/**"
   ],
 
   // The directory where Jest should output its coverage files

@@ -8,7 +8,7 @@
     "start": "node ./dist/server.js",
     "build": "tsc --noEmit false --outDir dist",
     "dev": "nodemon ./dist/server.js",
-    "test": "jest --watch --maxWorkers=1 --verbose"
+    "test": "jest --watchAll --maxWorkers=1 --verbose"
   },
   "keywords": [],
   "author": "",

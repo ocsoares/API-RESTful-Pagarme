@@ -20,6 +20,6 @@ export const transactionValidation = () => {
             .isLength({ min: 5, max: 5 }).withMessage('Insira um card_expiration_date válido no formáto mm/aa !'),
 
         body('cvv').not().isString().withMessage('Insira um cvv válido no formato int !')
-            .isInt().isLength({ min: 3 }).withMessage('Insira um cvv válido no formato int com no mínimo 3 caracteres !')
+            .isInt().isLength({ min: 3, max: 3 }).withMessage('Insira um cvv válido no formato int com no mínimo 3 caracteres !')
     ];
 };

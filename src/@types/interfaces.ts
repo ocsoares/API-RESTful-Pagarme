@@ -23,8 +23,9 @@ export interface ITransaction {
 }
 
 export interface IPayableModel {
-    status: string;
-    payment_date: string;
+    status: 'paid' | 'waiting_funds';
+    payment_date: Date;
+    idTransfer: string;
 }
 
 export interface IBalanceModel {
