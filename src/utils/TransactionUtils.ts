@@ -1,19 +1,17 @@
 import { isValidObjectId } from "mongoose";
-import { IPayableModel } from "../@types/interfaces";
+import { IPayableModel, ITransaction } from "../@types/interfaces";
 import Logger from "../config/logs";
 import { BadRequestAPIError } from "../helpers/ErrorAPIHelper";
 import { PayableModel } from "../models/PayableModel";
 import { TransactionModel } from "../models/TransactionModel";
 import { staticInterfaceMethods } from '../utils/staticInterfaceMethodsUtils';
 
-// FAZER Testes para isso !!!! <<<<
-
 interface ITransactionMethods {
     savePayableCreditCard(idTransfer: string): Promise<IPayableModel>;
     savePayableDebitCard(idTransfer: string): Promise<IPayableModel>;
 }
 
-const checkTransferID = async (idTransfer: string): Promise<boolean> => {
+const checkTransferID = async (idTransfer: string): Promise<ITransaction | false> => {
     const searchTransferID = await TransactionModel.findById(idTransfer);
 
     if (!isValidObjectId(idTransfer)) {
@@ -24,19 +22,24 @@ const checkTransferID = async (idTransfer: string): Promise<boolean> => {
         return false;
     }
 
-    return true;
+    return searchTransferID;
 };
 
 @staticInterfaceMethods<ITransactionMethods>()
 export class TransactionUtils {
     static async savePayableCreditCard(idTransfer: string): Promise<IPayableModel> {
-        const isValidTransferID = await checkTransferID(idTransfer);
+        const transferInformation = await checkTransferID(idTransfer);
 
-        if (!isValidTransferID) {
+        if (!transferInformation) {
             throw new BadRequestAPIError('ID de transferência inválido !');
         }
 
+        const threePercentProcessingFee = Number((transferInformation.transfer_amount -
+            (transferInformation.transfer_amount * 0.03)).toFixed(2));
+        console.log('threePerc...', threePercentProcessingFee);
+
         const newPayable = new PayableModel(<IPayableModel>{
+            transfer_amount: threePercentProcessingFee,
             status: 'paid',
             payment_date: new Date(),
             idTransfer
@@ -52,24 +55,25 @@ export class TransactionUtils {
     };
 
     static async savePayableDebitCard(idTransfer: string): Promise<IPayableModel> {
-        const isValidTransferID = await checkTransferID(idTransfer);
+        const transferInformation = await checkTransferID(idTransfer);
 
-        if (!isValidTransferID) {
+        if (!transferInformation) {
             throw new BadRequestAPIError('ID de transferência inválido !');
         }
 
         const currentDate = new Date();
         const dateAfterThirtyDays = new Date(currentDate.setDate(currentDate.getDate() + 30));
-        console.log('dateAfterThirtyDays:', dateAfterThirtyDays);
+
+        const fivePercentProcessingFee = Number((transferInformation.transfer_amount -
+            (transferInformation.transfer_amount * 0.05)).toFixed(2));
+        console.log('fivePer..', fivePercentProcessingFee);
 
         const newPayable = new PayableModel(<IPayableModel>{
+            transfer_amount: fivePercentProcessingFee,
             status: 'waiting_funds',
             payment_date: dateAfterThirtyDays,
             idTransfer
         });
-
-        // TIRAR Depois...
-        console.log('payableDebitCard:', newPayable);
 
         await newPayable.save();
 

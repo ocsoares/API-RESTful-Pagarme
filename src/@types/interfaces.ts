@@ -13,7 +13,7 @@ export interface IUserAccount {
 }
 
 export interface ITransaction {
-    value: number;
+    transfer_amount: number;
     description: string;
     payment_method: 'debit_card' | 'credit_card';
     card_number: string;
@@ -23,6 +23,7 @@ export interface ITransaction {
 }
 
 export interface IPayableModel {
+    transfer_amount: number;
     status: 'paid' | 'waiting_funds';
     payment_date: Date;
     idTransfer: string;

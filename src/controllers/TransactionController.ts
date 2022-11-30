@@ -15,7 +15,7 @@ interface ITransactionMethods {
 export class TransactionController {
     static async transfer(req: Request, res: Response): Promise<Response> {
         const {
-            value,
+            transfer_amount,
             description,
             payment_method,
             card_number,
@@ -29,7 +29,7 @@ export class TransactionController {
         const hashCardExpirationDate = await bcrypt.hash(card_expiration_date, 10);
 
         const newTransfer = new TransactionModel({
-            value,
+            transfer_amount,
             description,
             payment_method,
             card_number: lastForDigitsCard,

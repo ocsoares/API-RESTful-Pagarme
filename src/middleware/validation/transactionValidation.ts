@@ -2,8 +2,8 @@ import { body } from "express-validator";
 
 export const transactionValidation = () => {
     return [
-        body('value').not().isString().withMessage('Insira um valor válido no formato float !')
-            .isFloat({ min: 0.01 }).withMessage('Insira um valor válido no formato float maior que 0.00 !'),
+        body('transfer_amount').not().isString().withMessage('Insira um transfer_amount válido no formato float !')
+            .isFloat({ min: 0.01 }).withMessage('Insira um transfer_amount válido no formato float maior que 0.00 !'),
 
         body('description').isString().withMessage('Insira uma description válida no formato string !'),
 
