@@ -21,39 +21,37 @@ const searchTestTransferAccount = async () => {
 
 describe('Transaction Utils Unit Test', () => {
 
-    it('Should be possible to generate a new payable credit card', async () => {
+    it('Should be possible to generate a new credit card bill payable', async () => {
         const getTransferAccount = await searchTestTransferAccount();
 
-        const payableCreditCard = await TransactionUtils.savePayableCreditCard(getTransferAccount!.id);
+        const creditCardBillPayable = await TransactionUtils.saveCreditCardBillPayable(getTransferAccount!.id);
 
-        expect(payableCreditCard).toHaveProperty('id');
+        expect(creditCardBillPayable).toHaveProperty('id');
     });
 
-    it('Should NOT be possible to generate a new payable credit card', async () => {
+    it('Should NOT be possible to generate a new credit card bill payable', async () => {
         expect.assertions(1); // Precisa disso em try/catch ??
         try {
-            await TransactionUtils.savePayableCreditCard('any_wrong_id');
+            await TransactionUtils.saveCreditCardBillPayable('any_wrong_id');
         }
         catch (error: any) {
             expect(error.message).toEqual(expectWrongMessage);
         }
     });
 
-    // COMITAR !!!
-    it('Should be possible to generate a new payable debit card', async () => {
+    it('Should be possible to generate a new debit card bill payable', async () => {
         const getTransferAccount = await searchTestTransferAccount();
 
-        const payableDebitCard = await TransactionUtils.savePayableDebitCard(getTransferAccount!.id);
+        const debitCardBillPayable = await TransactionUtils.saveDebitCardBillPayable(getTransferAccount!.id);
 
-        expect(payableDebitCard).toHaveProperty('id');
+        expect(debitCardBillPayable).toHaveProperty('id');
     });
 
-    it('Should NOT be possible to generate a new debit card', async () => {
+    it('Should NOT be possible to generate a new debit card bill payable', async () => {
         try {
-            await TransactionUtils.savePayableDebitCard('any_wrong_id');
+            await TransactionUtils.saveDebitCardBillPayable('any_wrong_id');
         }
         catch (error: any) {
-            console.log('debit...', error.message);
             expect(error.message).toEqual(expectWrongMessage);
         }
     });

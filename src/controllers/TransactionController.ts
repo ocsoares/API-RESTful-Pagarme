@@ -42,10 +42,10 @@ export class TransactionController {
         Logger.info(`Transação realizada com o cartão de final ${lastForDigitsCard} !`);
 
         if (newTransfer.payment_method === 'credit_card') {
-            await TransactionUtils.savePayableCreditCard(newTransfer.id);
+            await TransactionUtils.saveCreditCardBillPayable(newTransfer.id);
         }
         else {
-            await TransactionUtils.savePayableDebitCard(newTransfer.id);
+            await TransactionUtils.saveDebitCardBillPayable(newTransfer.id);
         }
 
         return res.status(StatusCodes.ACCEPTED).json({
