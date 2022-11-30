@@ -52,13 +52,24 @@ export class TransactionUtils {
     };
 
     static async savePayableDebitCard(idTransfer: string): Promise<IPayableModel> {
-        await checkTransferID(idTransfer);
+        const isValidTransferID = await checkTransferID(idTransfer);
+
+        if (!isValidTransferID) {
+            throw new BadRequestAPIError('ID de transferência inválido !');
+        }
+
+        const currentDate = new Date();
+        const dateAfterThirtyDays = new Date(currentDate.setDate(currentDate.getDate() + 30));
+        console.log('dateAfterThirtyDays:', dateAfterThirtyDays);
 
         const newPayable = new PayableModel(<IPayableModel>{
             status: 'waiting_funds',
-            payment_date: new Date(), // FAZER a data Atual + 30 !!
+            payment_date: dateAfterThirtyDays,
             idTransfer
         });
+
+        // TIRAR Depois...
+        console.log('payableDebitCard:', newPayable);
 
         await newPayable.save();
 
