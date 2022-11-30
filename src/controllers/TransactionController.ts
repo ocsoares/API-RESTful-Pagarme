@@ -24,11 +24,14 @@ export class TransactionController {
             cvv
         }: ITransaction = req.body;
 
+        const { id } = req.JWT;
+
         const lastForDigitsCard = card_number.slice(12, 16);
         const hashCardHolder = await bcrypt.hash(card_holder, 10);
         const hashCardExpirationDate = await bcrypt.hash(card_expiration_date, 10);
 
         const newTransfer = new TransactionModel({
+            id_account: id,
             transfer_amount,
             description,
             payment_method,

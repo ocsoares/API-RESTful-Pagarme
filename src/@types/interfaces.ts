@@ -12,7 +12,15 @@ export interface IUserAccount {
     updatedAt: Date;
 }
 
+export interface IJWT {
+    id: string;
+    username: string;
+    iat: number;
+    exp: number;
+}
+
 export interface ITransaction {
+    id_account: string;
     transfer_amount: number;
     description: string;
     payment_method: 'debit_card' | 'credit_card';
@@ -23,7 +31,9 @@ export interface ITransaction {
 }
 
 export interface IPayableModel {
+    id_account: string;
     transfer_amount: number;
+    description: string;
     status: 'paid' | 'waiting_funds';
     payment_date: Date;
     idTransfer: string;

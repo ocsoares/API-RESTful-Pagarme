@@ -203,6 +203,6 @@ export default {
 
   // Whether to use watchman for file crawling
   // watchman: true,
-  // testTimeout: 100000, // Tinha feito porque tava dando erro, mas parou !!
+  // testTimeout: 100000, // Quando por algum motivo da ERRO no Atlas DB, usar isso !! << 
   testSequencer: "./dist/config/test-sequencer.js"
 };

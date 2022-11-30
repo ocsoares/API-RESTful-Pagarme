@@ -1,6 +1,6 @@
-import { IUserAccount } from '../@types/interfaces';
+import { IJWT, IUserAccount } from '../@types/interfaces';
 import { UserModel } from '../models/UserModel';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { staticInterfaceMethods } from './staticInterfaceMethodsUtils';
 
 // const expiresIn = dayjs().add(15, 'second').unix(); // Unix transforma em NÚMERICO !!
@@ -8,7 +8,7 @@ import { staticInterfaceMethods } from './staticInterfaceMethodsUtils';
 interface IAuthUtilsMethods {
     searchUserByUsername(username: string): Promise<IUserAccount | false>;
     generateJWT(account: IUserAccount, hash: string, expiresIn: string): Promise<string>;
-    checkJWT(token: string, JWT_key: string): JwtPayload | boolean;
+    checkJWT(token: string, JWT_key: string): IJWT | false;
 }
 
 // Needs to be static method of the interface !!
@@ -37,11 +37,11 @@ export class AuthUtils {
         return JWT;
     }
 
-    static checkJWT(token: string, JWT_key: string): JwtPayload | false {
+    static checkJWT(token: string, JWT_key: string): IJWT | false {
         try {
             const checkJWT = jwt.verify(token, JWT_key);
 
-            return checkJWT as JwtPayload;
+            return checkJWT as IJWT;
         }
         catch (error: any) {
             return false;

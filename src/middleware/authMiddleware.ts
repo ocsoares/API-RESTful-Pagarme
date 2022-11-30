@@ -6,7 +6,6 @@ interface IAuthorizationToken {
     authorization: string;
 }
 
-// Pegar o Token no Authorization !!
 export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
     const { authorization }: IAuthorizationToken = req.headers as any;
 

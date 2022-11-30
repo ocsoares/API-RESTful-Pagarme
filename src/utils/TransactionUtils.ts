@@ -38,8 +38,10 @@ export class TransactionUtils {
             - (transferInformation.transfer_amount * 0.03)).toFixed(2));
 
         const newBillPayable = new PayableModel(<IPayableModel>{
+
             transfer_amount: threePercentProcessingFee,
-            status: 'paid',
+            description: transferInformation.description,
+            status: 'waiting_funds',
             payment_date: new Date(),
             idTransfer
         });
@@ -67,8 +69,10 @@ export class TransactionUtils {
             - (transferInformation.transfer_amount * 0.05)).toFixed(2));
 
         const newBillPayable = new PayableModel(<IPayableModel>{
+            id_account: transferInformation.id_account,
             transfer_amount: fivePercentProcessingFee,
-            status: 'waiting_funds',
+            description: transferInformation.description,
+            status: 'paid',
             payment_date: dateAfterThirtyDays,
             idTransfer
         });
