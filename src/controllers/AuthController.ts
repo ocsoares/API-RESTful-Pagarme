@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import Logger from '../config/logs';
 import { AuthUtils } from '../utils/AuthUtils';
@@ -7,11 +7,16 @@ import { BadRequestAPIError } from '../helpers/ErrorAPIHelper';
 import { UserModel } from '../models/UserModel';
 import bcrypt from 'bcrypt';
 import { IUserAccount } from '../@types/interfaces';
+import { staticInterfaceMethods } from '../utils/staticInterfaceMethodsUtils';
 
-// TALVEZ mudar o Login por Basic Auth !!!!! <<<
+interface IAuthMethods {
+    register(req: Request, res: Response): Promise<Response>;
+    login(req: Request, res: Response): Promise<Response>;
+}
 
+@staticInterfaceMethods<IAuthMethods>()
 export class AuthController {
-    static async register(req: Request, res: Response, next: NextFunction): Promise<Response> {
+    static async register(req: Request, res: Response): Promise<Response> {
         const { username, password, confirm_password }: IUserAccount = req.body;
 
         const userAlreadyExits = await AuthUtils.searchUserByUsername(username);
@@ -44,7 +49,7 @@ export class AuthController {
         });
     }
 
-    static async login(req: Request, res: Response, next: NextFunction): Promise<Response> {
+    static async login(req: Request, res: Response): Promise<Response> {
         const { username, password }: IUserAccount = req.body;
 
         const searchUser = await AuthUtils.searchUserByUsername(username);
@@ -56,6 +61,7 @@ export class AuthController {
         const checkPassword = await bcrypt.compare(password, searchUser.password);
 
         if (!checkPassword) {
+            Logger.error(`Alguém tentou acessar a conta '${username}', mas sem sucesso !`);
             throw new BadRequestAPIError('Username ou password inválido !');
         }
 

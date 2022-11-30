@@ -41,7 +41,6 @@ export class TransactionController {
 
         Logger.info(`Transação realizada com o cartão de final ${lastForDigitsCard} !`);
 
-        // TESTAR sem o console.log() DEPOIS APAGAR esse Comentário... !!!! <<<<
         if (newTransfer.payment_method === 'credit_card') {
             await TransactionUtils.savePayableCreditCard(newTransfer.id);
         }
