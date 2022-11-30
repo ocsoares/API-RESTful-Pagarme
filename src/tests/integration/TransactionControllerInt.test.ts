@@ -5,7 +5,7 @@ import { app } from '../../app';
 
 const transactionPost = async (
     urlRoute: string,
-    value: number,
+    transfer_amount: number,
     description: string,
     payment_method: 'debit_card' | 'credit_card',
     card_number: string,
@@ -16,7 +16,7 @@ const transactionPost = async (
     const getResponse = await request(app).post(urlRoute)
         .set('Authorization', `Bearer ${process.env.JWT_NOT_EXPIRE}`)
         .send(<ITransaction>{
-            value,
+            transfer_amount,
             description,
             payment_method,
             card_number,
