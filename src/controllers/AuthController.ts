@@ -65,7 +65,6 @@ export class AuthController {
             throw new BadRequestAPIError('Username ou password inválido !');
         }
 
-        // No expiresIn, utilizar, se necessário, a lib dayjs
         const JWT = await AuthUtils.generateJWT(searchUser, process.env.JWT_HASH as string, '1h');
 
         return res.json({

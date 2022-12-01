@@ -27,13 +27,14 @@ export class TransactionController {
 
         const { id } = req.JWT;
 
+        const fixTransferAmountTwoDecimalPlaces = Number(transfer_amount.toFixed(2));
         const lastForDigitsCard = card_number.slice(12, 16);
         const hashCardHolder = await bcrypt.hash(card_holder, 10);
         const hashCardExpirationDate = await bcrypt.hash(card_expiration_date, 10);
 
         const newTransfer = new TransactionModel({
             account_id: id,
-            transfer_amount,
+            transfer_amount: fixTransferAmountTwoDecimalPlaces,
             description,
             payment_method,
             card_number: lastForDigitsCard,
