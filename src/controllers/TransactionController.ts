@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { IMainInformationOfAccountTransactions, IMainTransferInformation, ITransaction } from '../@types/interfaces';
+import { IMainTransactionInformation, IMainTransferInformation, ITransaction } from '../@types/interfaces';
 import { TransactionModel } from '../models/TransactionModel';
 import { staticInterfaceMethods } from '../utils/staticInterfaceMethodsUtils';
 import bcrypt from 'bcrypt';
@@ -10,6 +10,7 @@ import { TransactionUtils } from '../utils/TransactionUtils';
 interface ITransactionMethods {
     transfer(req: Request, res: Response): Promise<Response>;
     showAllAccountTransactions(req: Request, res: Response): Promise<Response>;
+    showAllCreditCardTransactions(req: Request, res: Response): Promise<Response>;
 }
 
 @staticInterfaceMethods<ITransactionMethods>()
@@ -69,13 +70,15 @@ export class TransactionController {
         });
     }
 
+    // FAZER TESTE !!!!!!!!
     static async showAllAccountTransactions(req: Request, res: Response): Promise<Response> {
         const { id } = req.JWT;
 
         // FAZER Teste dessa Função lá do Utils !!!
         const showAllAccountTransactions = await TransactionUtils.getAllAccountTransactions(id);
 
-        const mainInformationOfAccountTransactions = showAllAccountTransactions.map(prop => (<IMainInformationOfAccountTransactions>{
+        // Colocar isso para RETORNAR DIRETO no Método a cima !!!!! <<<
+        const mainInformationOfAccountTransactions = showAllAccountTransactions.map(prop => (<IMainTransactionInformation>{
             transfer_amount: prop.transfer_amount,
             payment_date: prop.payment_date.toLocaleString('pt-BR'),
             description: prop.description,
@@ -83,8 +86,20 @@ export class TransactionController {
         }));
 
         return res.json({
-            message: 'Your transactions were found !',
+            message: 'Your transactions have been found !',
             transactions: mainInformationOfAccountTransactions
+        });
+    }
+
+    // FAZER TESTE !!!!!!!!!
+    static async showAllCreditCardTransactions(req: Request, res: Response): Promise<Response> {
+        const { id } = req.JWT;
+
+        const showAllAccountTransactions = await TransactionUtils.getAllCreditCardTransactions(id);
+
+        return res.json({
+            message: 'Your credit card transactions have been found ! ',
+            transactions: showAllAccountTransactions
         });
     }
 }

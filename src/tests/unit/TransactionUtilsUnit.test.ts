@@ -7,7 +7,7 @@ afterAll(async () => {
     await cleanTestDBConnection();
 });
 
-const expectWrongMessage = 'ID de transferência inválido !';
+const expectIDWrongMessage = 'ID de transferência inválido !';
 const TEST_CARD_LAST_FOR_DIGITS = process.env.TEST_CARD_LAST_FOR_DIGITS as string;
 
 // Transfer account NEED to exist !!!
@@ -35,7 +35,7 @@ describe('Transaction Utils Unit Test', () => {
             await TransactionUtils.saveCreditCardBillPayable('any_wrong_id');
         }
         catch (error: any) {
-            expect(error.message).toEqual(expectWrongMessage);
+            expect(error.message).toEqual(expectIDWrongMessage);
         }
     });
 
@@ -48,11 +48,12 @@ describe('Transaction Utils Unit Test', () => {
     });
 
     it('Should NOT be possible to generate a new debit card bill payable', async () => {
+        expect.assertions(1);
         try {
             await TransactionUtils.saveDebitCardBillPayable('any_wrong_id');
         }
         catch (error: any) {
-            expect(error.message).toEqual(expectWrongMessage);
+            expect(error.message).toEqual(expectIDWrongMessage);
         }
     });
 

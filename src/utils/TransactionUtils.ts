@@ -1,5 +1,5 @@
 import { isValidObjectId } from "mongoose";
-import { IPayableModel, ITransaction } from "../@types/interfaces";
+import { IMainTransactionInformation, IPayableModel, ITransaction } from "../@types/interfaces";
 import Logger from "../config/logs";
 import { BadRequestAPIError } from "../helpers/ErrorAPIHelper";
 import { PayableModel } from "../models/PayableModel";
@@ -10,6 +10,7 @@ interface ITransactionMethods {
     saveCreditCardBillPayable(transfer_id: string): Promise<IPayableModel>;
     saveDebitCardBillPayable(transfer_id: string): Promise<IPayableModel>;
     getAllAccountTransactions(account_id: string): Promise<Array<IPayableModel>>;
+    getAllCreditCardTransactions(account_id: string): Promise<Array<IMainTransactionInformation>>;
 }
 
 const checkTransferID = async (transfer_id: string): Promise<ITransaction | false> => {
@@ -87,9 +88,27 @@ export class TransactionUtils {
         return newBillPayable;
     };
 
+    // FAZER TESTES !!!!! <<<<<
     static async getAllAccountTransactions(account_id: string): Promise<Array<IPayableModel>> {
         const getAllAccountTransactions = await PayableModel.find({ account_id });
 
         return getAllAccountTransactions;
+    }
+
+    // FAZER TESTES !!!! <<<<<
+    static async getAllCreditCardTransactions(account_id: string): Promise<Array<IMainTransactionInformation>> {
+        const getAllCreditCardTransactions = await PayableModel.find(<IPayableModel>{
+            account_id,
+            status: 'waiting_funds'
+        });
+
+        const mainCreditCardTransactionInformation = getAllCreditCardTransactions.map(prop => (<IMainTransactionInformation>{
+            transfer_amount: prop.transfer_amount,
+            payment_date: prop.payment_date.toLocaleString('pt-BR'),
+            description: prop.description,
+            status: prop.status
+        }));
+
+        return mainCreditCardTransactionInformation;
     }
 }

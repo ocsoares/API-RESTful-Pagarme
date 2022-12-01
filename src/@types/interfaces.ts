@@ -55,9 +55,9 @@ export interface IMainTransferInformation {
     card_expiration_date: string;
 }
 
-export interface IMainInformationOfAccountTransactions {
+export interface IMainTransactionInformation {
     transfer_amount: number;
     payment_date: string;
     description: string;
-    status: string;
+    status: 'paid' | 'waiting_funds';
 }

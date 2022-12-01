@@ -7,7 +7,8 @@ import { TransactionController } from "../controllers/TransactionController";
 const transactionRoute = Router();
 
 transactionRoute.get('/transaction', authMiddleware, TransactionController.showAllAccountTransactions);
-
 transactionRoute.post('/transaction', transactionValidation(), handleValidation, authMiddleware, TransactionController.transfer);
+
+transactionRoute.get('/transaction/credit-card', authMiddleware, TransactionController.showAllCreditCardTransactions);
 
 export default transactionRoute;
