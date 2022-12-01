@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ITransaction } from '../@types/interfaces';
+import { IMainInformationOfAccountTransactions, IMainTransferInformation, ITransaction } from '../@types/interfaces';
 import { TransactionModel } from '../models/TransactionModel';
 import { staticInterfaceMethods } from '../utils/staticInterfaceMethodsUtils';
 import bcrypt from 'bcrypt';
@@ -9,6 +9,7 @@ import { TransactionUtils } from '../utils/TransactionUtils';
 
 interface ITransactionMethods {
     transfer(req: Request, res: Response): Promise<Response>;
+    showAllAccountTransactions(req: Request, res: Response): Promise<Response>;
 }
 
 @staticInterfaceMethods<ITransactionMethods>()
@@ -31,7 +32,7 @@ export class TransactionController {
         const hashCardExpirationDate = await bcrypt.hash(card_expiration_date, 10);
 
         const newTransfer = new TransactionModel({
-            id_account: id,
+            account_id: id,
             transfer_amount,
             description,
             payment_method,
@@ -41,6 +42,16 @@ export class TransactionController {
         });
 
         await newTransfer.save();
+
+        const mainTransferInformation: IMainTransferInformation = {
+            transfer_amount: newTransfer.transfer_amount,
+            transfer_date: new Date().toLocaleString('pt-BR'),
+            description: newTransfer.description,
+            payment_method: newTransfer.payment_method,
+            card_number: newTransfer.card_number,
+            card_holder: newTransfer.card_holder,
+            card_expiration_date: newTransfer.card_expiration_date
+        };
 
         Logger.info(`Transação realizada com o cartão de final ${lastForDigitsCard} !`);
 
@@ -53,7 +64,26 @@ export class TransactionController {
 
         return res.status(StatusCodes.ACCEPTED).json({
             message: 'Transation done !',
-            newTransfer
+            new_transfer: mainTransferInformation
+        });
+    }
+
+    static async showAllAccountTransactions(req: Request, res: Response): Promise<Response> {
+        const { id } = req.JWT;
+
+        // FAZER Teste dessa Função lá do Utils !!!
+        const showAllAccountTransactions = await TransactionUtils.getAllAccountTransactions(id);
+
+        const mainInformationOfAccountTransactions = showAllAccountTransactions.map(prop => (<IMainInformationOfAccountTransactions>{
+            transfer_amount: prop.transfer_amount,
+            payment_date: prop.payment_date.toLocaleString('pt-BR'),
+            description: prop.description,
+            status: prop.status
+        }));
+
+        return res.json({
+            message: 'Your transactions were found !',
+            transactions: mainInformationOfAccountTransactions
         });
     }
 }

@@ -7,14 +7,15 @@ import { TransactionModel } from "../models/TransactionModel";
 import { staticInterfaceMethods } from '../utils/staticInterfaceMethodsUtils';
 
 interface ITransactionMethods {
-    saveCreditCardBillPayable(idTransfer: string): Promise<IPayableModel>;
-    saveDebitCardBillPayable(idTransfer: string): Promise<IPayableModel>;
+    saveCreditCardBillPayable(transfer_id: string): Promise<IPayableModel>;
+    saveDebitCardBillPayable(transfer_id: string): Promise<IPayableModel>;
+    getAllAccountTransactions(account_id: string): Promise<Array<IPayableModel>>;
 }
 
-const checkTransferID = async (idTransfer: string): Promise<ITransaction | false> => {
-    const searchTransferID = await TransactionModel.findById(idTransfer);
+const checkTransferID = async (transfer_id: string): Promise<ITransaction | false> => {
+    const searchTransferID = await TransactionModel.findById(transfer_id);
 
-    if (!isValidObjectId(idTransfer)) {
+    if (!isValidObjectId(transfer_id)) {
         return false;
     }
 
@@ -27,62 +28,68 @@ const checkTransferID = async (idTransfer: string): Promise<ITransaction | false
 
 @staticInterfaceMethods<ITransactionMethods>()
 export class TransactionUtils {
-    static async saveCreditCardBillPayable(idTransfer: string): Promise<IPayableModel> {
-        const transferInformation = await checkTransferID(idTransfer);
-
-        if (!transferInformation) {
-            throw new BadRequestAPIError('ID de transferência inválido !');
-        }
-
-        const threePercentProcessingFee = Number((transferInformation.transfer_amount
-            - (transferInformation.transfer_amount * 0.03)).toFixed(2));
-
-        const newBillPayable = new PayableModel(<IPayableModel>{
-
-            transfer_amount: threePercentProcessingFee,
-            description: transferInformation.description,
-            status: 'waiting_funds',
-            payment_date: new Date(),
-            idTransfer
-        });
-
-        await newBillPayable.save();
-
-        Logger.info(
-            `Payable no cartão de crédito gerado para a transferência '${newBillPayable.idTransfer}' !`
-        );
-
-        return newBillPayable;
-    };
-
-    static async saveDebitCardBillPayable(idTransfer: string): Promise<IPayableModel> {
-        const transferInformation = await checkTransferID(idTransfer);
+    static async saveCreditCardBillPayable(transfer_id: string): Promise<IPayableModel> {
+        const transferInformation = await checkTransferID(transfer_id);
 
         if (!transferInformation) {
             throw new BadRequestAPIError('ID de transferência inválido !');
         }
 
         const currentDate = new Date();
-        const dateAfterThirtyDays = new Date(currentDate.setDate(currentDate.getDate() + 30));
+        const currentDateAfterThirtyDays = new Date(currentDate.setDate(currentDate.getDate() + 30));
 
-        const fivePercentProcessingFee = Number((transferInformation.transfer_amount
-            - (transferInformation.transfer_amount * 0.05)).toFixed(2));
+        const threePercentProcessingFee = Number((transferInformation.transfer_amount
+            - (transferInformation.transfer_amount * 0.03)).toFixed(2));
 
         const newBillPayable = new PayableModel(<IPayableModel>{
-            id_account: transferInformation.id_account,
-            transfer_amount: fivePercentProcessingFee,
+            account_id: transferInformation.account_id,
+            transfer_amount: threePercentProcessingFee,
             description: transferInformation.description,
-            status: 'paid',
-            payment_date: dateAfterThirtyDays,
-            idTransfer
+            status: 'waiting_funds',
+            payment_date: currentDateAfterThirtyDays,
+            transfer_id
         });
 
         await newBillPayable.save();
 
         Logger.info(
-            `Payable no cartão de débito gerado para a transferência '${newBillPayable.idTransfer}'`
+            `Payable no cartão de crédito gerado para a transferência '${newBillPayable.transfer_id}' !`
         );
 
         return newBillPayable;
     };
+
+    static async saveDebitCardBillPayable(transfer_id: string): Promise<IPayableModel> {
+        const transferInformation = await checkTransferID(transfer_id);
+
+        if (!transferInformation) {
+            throw new BadRequestAPIError('ID de transferência inválido !');
+        }
+
+        const fivePercentProcessingFee = Number((transferInformation.transfer_amount
+            - (transferInformation.transfer_amount * 0.05)).toFixed(2));
+
+        const newBillPayable = new PayableModel(<IPayableModel>{
+            account_id: transferInformation.account_id,
+            transfer_amount: fivePercentProcessingFee,
+            description: transferInformation.description,
+            status: 'paid',
+            payment_date: new Date(),
+            transfer_id
+        });
+
+        await newBillPayable.save();
+
+        Logger.info(
+            `Payable no cartão de débito gerado para a transferência '${newBillPayable.transfer_id}'`
+        );
+
+        return newBillPayable;
+    };
+
+    static async getAllAccountTransactions(account_id: string): Promise<Array<IPayableModel>> {
+        const getAllAccountTransactions = await PayableModel.find({ account_id });
+
+        return getAllAccountTransactions;
+    }
 }

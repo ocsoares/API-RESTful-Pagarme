@@ -20,7 +20,7 @@ export interface IJWT {
 }
 
 export interface ITransaction {
-    id_account: string;
+    account_id: string;
     transfer_amount: number;
     description: string;
     payment_method: 'debit_card' | 'credit_card';
@@ -31,15 +31,33 @@ export interface ITransaction {
 }
 
 export interface IPayableModel {
-    id_account: string;
+    account_id: string;
     transfer_amount: number;
     description: string;
     status: 'paid' | 'waiting_funds';
     payment_date: Date;
-    idTransfer: string;
+    transfer_id: string;
 }
 
+// SE PA Apagar !!!!!!!! <<<<<<
 export interface IBalanceModel {
     available: string[];
     waiting_funds: string[];
+}
+
+export interface IMainTransferInformation {
+    transfer_amount: number;
+    transfer_date: string;
+    description: string;
+    payment_method: string;
+    card_number: string;
+    card_holder: string;
+    card_expiration_date: string;
+}
+
+export interface IMainInformationOfAccountTransactions {
+    transfer_amount: number;
+    payment_date: string;
+    description: string;
+    status: string;
 }
