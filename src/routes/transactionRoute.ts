@@ -10,5 +10,6 @@ transactionRoute.get('/transaction', authMiddleware, TransactionController.showA
 transactionRoute.post('/transaction', transactionValidation(), handleValidation, authMiddleware, TransactionController.transfer);
 
 transactionRoute.get('/transaction/credit-card', authMiddleware, TransactionController.showAllCreditCardTransactions);
+transactionRoute.get('/transaction/debit-card', authMiddleware, TransactionController.showAllDebitCardTransactions);
 
 export default transactionRoute;

@@ -9,8 +9,9 @@ import { staticInterfaceMethods } from '../utils/staticInterfaceMethodsUtils';
 interface ITransactionMethods {
     saveCreditCardBillPayable(transfer_id: string): Promise<IPayableModel>;
     saveDebitCardBillPayable(transfer_id: string): Promise<IPayableModel>;
-    getAllAccountTransactions(account_id: string): Promise<Array<IPayableModel>>;
+    getAllAccountTransactions(account_id: string): Promise<Array<IMainTransactionInformation>>;
     getAllCreditCardTransactions(account_id: string): Promise<Array<IMainTransactionInformation>>;
+    getAllDebitCardTransactions(account_id: string): Promise<Array<IMainTransactionInformation>>;
 }
 
 const checkTransferID = async (transfer_id: string): Promise<ITransaction | false> => {
@@ -89,10 +90,17 @@ export class TransactionUtils {
     };
 
     // FAZER TESTES !!!!! <<<<<
-    static async getAllAccountTransactions(account_id: string): Promise<Array<IPayableModel>> {
+    static async getAllAccountTransactions(account_id: string): Promise<Array<IMainTransactionInformation>> {
         const getAllAccountTransactions = await PayableModel.find({ account_id });
 
-        return getAllAccountTransactions;
+        const mainAccountTransactionsInformation = getAllAccountTransactions.map(prop => (<IMainTransactionInformation>{
+            transfer_amount: prop.transfer_amount,
+            payment_date: prop.transfer_amount.toLocaleString('pt-BR'),
+            description: prop.description,
+            status: prop.status
+        }));
+
+        return mainAccountTransactionsInformation;
     }
 
     // FAZER TESTES !!!! <<<<<
@@ -110,5 +118,22 @@ export class TransactionUtils {
         }));
 
         return mainCreditCardTransactionInformation;
+    }
+
+    // FAZER TESTES !!!! <<<<<
+    static async getAllDebitCardTransactions(account_id: string): Promise<Array<IMainTransactionInformation>> {
+        const getAllDebitCardTransactions = await PayableModel.find(<IPayableModel>{
+            account_id,
+            status: 'paid'
+        });
+
+        const mainDebitCardTransactionInformation = getAllDebitCardTransactions.map(prop => (<IMainTransactionInformation>{
+            transfer_amount: prop.transfer_amount,
+            payment_date: prop.payment_date.toLocaleString('pt-BR'),
+            description: prop.description,
+            status: prop.status
+        }));
+
+        return mainDebitCardTransactionInformation;
     }
 }

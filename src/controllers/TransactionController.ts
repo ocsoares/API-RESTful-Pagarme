@@ -11,6 +11,7 @@ interface ITransactionMethods {
     transfer(req: Request, res: Response): Promise<Response>;
     showAllAccountTransactions(req: Request, res: Response): Promise<Response>;
     showAllCreditCardTransactions(req: Request, res: Response): Promise<Response>;
+    showAllDebitCardTransactions(req: Request, res: Response): Promise<Response>;
 }
 
 @staticInterfaceMethods<ITransactionMethods>()
@@ -77,17 +78,9 @@ export class TransactionController {
         // FAZER Teste dessa Função lá do Utils !!!
         const showAllAccountTransactions = await TransactionUtils.getAllAccountTransactions(id);
 
-        // Colocar isso para RETORNAR DIRETO no Método a cima !!!!! <<<
-        const mainInformationOfAccountTransactions = showAllAccountTransactions.map(prop => (<IMainTransactionInformation>{
-            transfer_amount: prop.transfer_amount,
-            payment_date: prop.payment_date.toLocaleString('pt-BR'),
-            description: prop.description,
-            status: prop.status
-        }));
-
         return res.json({
             message: 'Your transactions have been found !',
-            transactions: mainInformationOfAccountTransactions
+            transactions: showAllAccountTransactions
         });
     }
 
@@ -100,6 +93,18 @@ export class TransactionController {
         return res.json({
             message: 'Your credit card transactions have been found ! ',
             transactions: showAllAccountTransactions
+        });
+    }
+
+    // FAZER TESTE !!!!!!!!!
+    static async showAllDebitCardTransactions(req: Request, res: Response): Promise<Response> {
+        const { id } = req.JWT;
+
+        const showAllDebitCardTransactions = await TransactionUtils.getAllDebitCardTransactions(id);
+
+        return res.json({
+            message: 'Your debit card transactions have been found !',
+            transactions: showAllDebitCardTransactions
         });
     }
 }
