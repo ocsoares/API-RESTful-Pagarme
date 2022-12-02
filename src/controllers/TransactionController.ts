@@ -66,12 +66,6 @@ export class TransactionController {
             await TransactionUtils.saveDebitCardBillPayable(newTransfer.id);
         }
 
-        // Usar isso pra tentar arrumar o TESTE e depois APAGAR !!!
-        // ACHO que lá no Testes tem que SALVAR os Payables antes de Buscar TODOS !!!!! <<
-        console.log('ID no Controller:', id);
-        const showAllAccountTransactions = await TransactionUtils.getAllAccountTransactions(id);
-        console.log('showAll...', showAllAccountTransactions);
-
         return res.status(StatusCodes.ACCEPTED).json({
             message: 'Transation done !',
             new_transfer: mainTransferInformation
