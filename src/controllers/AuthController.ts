@@ -65,7 +65,7 @@ export class AuthController {
             throw new BadRequestAPIError('Username ou password inválido !');
         }
 
-        const JWT = await AuthUtils.generateJWT(searchUser, process.env.JWT_HASH as string, '1h');
+        const JWT = await AuthUtils.generateJWT(searchUser, '1h');
 
         return res.json({
             message: 'Authenticated !',

@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { IMainTransactionInformation, IMainTransferInformation, ITransaction } from '../@types/interfaces';
+import { Request, Response } from 'express';
+import { IMainTransferInformation, ITransaction } from '../@types/interfaces';
 import { TransactionModel } from '../models/TransactionModel';
 import { staticInterfaceMethods } from '../utils/staticInterfaceMethodsUtils';
 import bcrypt from 'bcrypt';
@@ -58,12 +58,19 @@ export class TransactionController {
 
         Logger.info(`Transação realizada com o cartão de final ${lastForDigitsCard} !`);
 
+
         if (newTransfer.payment_method === 'credit_card') {
             await TransactionUtils.saveCreditCardBillPayable(newTransfer.id);
         }
         else {
             await TransactionUtils.saveDebitCardBillPayable(newTransfer.id);
         }
+
+        // Usar isso pra tentar arrumar o TESTE e depois APAGAR !!!
+        // ACHO que lá no Testes tem que SALVAR os Payables antes de Buscar TODOS !!!!! <<
+        console.log('ID no Controller:', id);
+        const showAllAccountTransactions = await TransactionUtils.getAllAccountTransactions(id);
+        console.log('showAll...', showAllAccountTransactions);
 
         return res.status(StatusCodes.ACCEPTED).json({
             message: 'Transation done !',

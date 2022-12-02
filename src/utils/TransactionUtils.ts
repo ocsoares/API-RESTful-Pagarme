@@ -89,7 +89,6 @@ export class TransactionUtils {
         return newBillPayable;
     };
 
-    // FAZER TESTES !!!!! <<<<<
     static async getAllAccountTransactions(account_id: string): Promise<Array<IMainTransactionInformation>> {
         const getAllAccountTransactions = await PayableModel.find({ account_id });
 

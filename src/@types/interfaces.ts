@@ -4,7 +4,7 @@ export interface IUserModel {
 }
 
 export interface IUserAccount {
-    _id: string;
+    id: string;
     username: string;
     password: string;
     confirm_password?: string;

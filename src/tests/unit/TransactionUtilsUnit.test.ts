@@ -1,6 +1,10 @@
 import 'dotenv/config';
+import { IUserAccount } from '../../@types/interfaces';
 import { cleanTestDBConnection } from "../../config/database";
+import { PayableModel } from '../../models/PayableModel';
 import { TransactionModel } from '../../models/TransactionModel';
+import { UserModel } from '../../models/UserModel';
+import { AuthUtils } from '../../utils/AuthUtils';
 import { TransactionUtils } from "../../utils/TransactionUtils";
 
 afterAll(async () => {
@@ -9,14 +13,22 @@ afterAll(async () => {
 
 const expectIDWrongMessage = 'ID de transferência inválido !';
 const TEST_CARD_LAST_FOR_DIGITS = process.env.TEST_CARD_LAST_FOR_DIGITS as string;
+const TEST_USERNAME = process.env.TEST_USERNAME as string;
 
-// Transfer account NEED to exist !!!
+// This transfer account exists in test database !
 const searchTestTransferAccount = async () => {
     const searchTransferAccount = await TransactionModel.findOne({
         card_number: TEST_CARD_LAST_FOR_DIGITS
     });
 
     return searchTransferAccount;
+};
+
+// This user exists in test database !
+const searchTestUser = async () => {
+    const searchUser = await AuthUtils.searchUserByUsername(TEST_USERNAME) as IUserAccount;
+
+    return searchUser;
 };
 
 describe('Transaction Utils Unit Test', () => {
@@ -57,4 +69,17 @@ describe('Transaction Utils Unit Test', () => {
         }
     });
 
+    it('Should be possible to get all account transactions', async () => {
+        const getUser = await searchTestUser();
+
+        const getAllAccountTransactions = await TransactionUtils.getAllAccountTransactions(getUser.id);
+
+        expect(getAllAccountTransactions[0]).toHaveProperty('transfer_amount');
+    });
+
+    it('Should NOT be possible to get all account transactions', async () => {
+        const getAllAccountTransactions = await TransactionUtils.getAllAccountTransactions('invalid_id');
+
+        expect(getAllAccountTransactions[0]).toBe(undefined);
+    });
 });

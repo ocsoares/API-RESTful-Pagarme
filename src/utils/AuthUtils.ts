@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { IJWT, IUserAccount } from '../@types/interfaces';
 import { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
@@ -7,6 +8,7 @@ import { staticInterfaceMethods } from './staticInterfaceMethodsUtils';
 
 interface IAuthUtilsMethods {
     searchUserByUsername(username: string): Promise<IUserAccount | false>;
+    searchUserByID(id: string): Promise<IUserAccount | false>;
     generateJWT(account: IUserAccount, hash: string, expiresIn: string): Promise<string>;
     checkJWT(token: string, JWT_key: string): IJWT | false;
 }
@@ -26,11 +28,21 @@ export class AuthUtils {
         return isUserExists;
     }
 
-    static async generateJWT(account: IUserAccount, hash: string, expiresIn: string): Promise<string> {
+    static async searchUserByID(id: string): Promise<IUserAccount | false> {
+        const searchUserByID = await UserModel.findById(id) as IUserAccount;
+
+        if (!searchUserByID) {
+            return false;
+        }
+
+        return searchUserByID;
+    }
+
+    static async generateJWT(account: IUserAccount, expiresIn: string): Promise<string> {
         const JWT = jwt.sign({
-            id: account._id.toString(),
+            id: account.id,
             username: account.username
-        }, "" + hash, {
+        }, "" + process.env.JWT_HASH as string, {
             expiresIn
         });
 

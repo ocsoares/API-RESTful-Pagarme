@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import { cleanTestDBConnection } from "../../config/database";
 import { AuthUtils } from "../../utils/AuthUtils";
 import { IUserAccount } from '../../@types/interfaces';
 
@@ -11,7 +10,7 @@ const JWT_HASH = process.env.JWT_HASH as string;
 describe('Auth Utils Unit Test', () => {
 
     it('Should be possible to search a user if exists', async () => {
-        const searchUser = await AuthUtils.searchUserByUsername(TEST_USERNAME);
+        const searchUser = await AuthUtils.searchUserByUsername(TEST_USERNAME) as IUserAccount;
 
         expect(searchUser).not.toBe(false);
     });
@@ -20,7 +19,7 @@ describe('Auth Utils Unit Test', () => {
         // User need to exist !!
         const searchUser = await AuthUtils.searchUserByUsername(TEST_USERNAME) as IUserAccount;
 
-        const JWT = await AuthUtils.generateJWT(searchUser, 'any_hash', '1h');
+        const JWT = await AuthUtils.generateJWT(searchUser, '1h');
 
         expect(JWT).toBe<string>;
     });

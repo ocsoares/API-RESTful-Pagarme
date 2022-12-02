@@ -1,7 +1,15 @@
 import 'dotenv/config';
 import request from 'supertest';
-import { ITransaction } from '../../@types/interfaces';
+import { ITransaction, IUserAccount } from '../../@types/interfaces';
 import { app } from '../../app';
+import { AuthUtils } from '../../utils/AuthUtils';
+
+const getJWT = async (): Promise<string> => {
+    const searchUserByUsername = await AuthUtils.searchUserByUsername(process.env.TEST_USERNAME as string) as IUserAccount;
+    const generateJWT = AuthUtils.generateJWT(searchUserByUsername, '1h');
+
+    return generateJWT;
+};
 
 const transactionPost = async (
     urlRoute: string,
@@ -14,7 +22,7 @@ const transactionPost = async (
     cvv: number
 ): Promise<request.Response> => {
     const getResponse = await request(app).post(urlRoute)
-        .set('Authorization', `Bearer ${process.env.JWT_NOT_EXPIRE}`)
+        .set('Authorization', `Bearer ${await getJWT()}`)
         .send(<ITransaction>{
             transfer_amount,
             description,
