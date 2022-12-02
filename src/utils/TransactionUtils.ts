@@ -102,7 +102,6 @@ export class TransactionUtils {
         return mainAccountTransactionsInformation;
     }
 
-    // FAZER TESTES !!!! <<<<<
     static async getAllCreditCardTransactions(account_id: string): Promise<Array<IMainTransactionInformation>> {
         const getAllCreditCardTransactions = await PayableModel.find(<IPayableModel>{
             account_id,

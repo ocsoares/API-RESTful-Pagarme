@@ -1,9 +1,7 @@
 import 'dotenv/config';
 import { IUserAccount } from '../../@types/interfaces';
 import { cleanTestDBConnection } from "../../config/database";
-import { PayableModel } from '../../models/PayableModel';
 import { TransactionModel } from '../../models/TransactionModel';
-import { UserModel } from '../../models/UserModel';
 import { AuthUtils } from '../../utils/AuthUtils';
 import { TransactionUtils } from "../../utils/TransactionUtils";
 
@@ -81,5 +79,19 @@ describe('Transaction Utils Unit Test', () => {
         const getAllAccountTransactions = await TransactionUtils.getAllAccountTransactions('invalid_id');
 
         expect(getAllAccountTransactions[0]).toBe(undefined);
+    });
+
+    it('Should be possible to get all credit card transactions', async () => {
+        const getUser = await searchTestUser();
+
+        const getAllCreditCardTransactions = await TransactionUtils.getAllCreditCardTransactions(getUser.id);
+
+        expect(getAllCreditCardTransactions[0]).toHaveProperty('transfer_amount');
+    });
+
+    it('Should NOT be possible to get all credit card transactions', async () => {
+        const getAllCreditCardTransactions = await TransactionUtils.getAllCreditCardTransactions('invalid_id');
+
+        expect(getAllCreditCardTransactions[0]).toBe(undefined);
     });
 });
