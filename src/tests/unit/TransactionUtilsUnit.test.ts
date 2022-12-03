@@ -86,12 +86,26 @@ describe('Transaction Utils Unit Test', () => {
 
         const getAllCreditCardTransactions = await TransactionUtils.getAllCreditCardTransactions(getUser.id);
 
-        expect(getAllCreditCardTransactions[0]).toHaveProperty('transfer_amount');
+        expect(getAllCreditCardTransactions[0].status).toBe('waiting_funds');
     });
 
     it('Should NOT be possible to get all credit card transactions', async () => {
         const getAllCreditCardTransactions = await TransactionUtils.getAllCreditCardTransactions('invalid_id');
 
         expect(getAllCreditCardTransactions[0]).toBe(undefined);
+    });
+
+    it('Should be possible to get all debit card transactions', async () => {
+        const getUser = await searchTestUser();
+
+        const getAllDebitCardTransactions = await TransactionUtils.getAllDebitCardTransactions(getUser.id);
+
+        expect(getAllDebitCardTransactions[0].status).toBe('paid');
+    });
+
+    it('Should NOT be possible to get all debit card transactions', async () => {
+        const getAllDebitCardTransactions = await TransactionUtils.getAllDebitCardTransactions('invalid_id');
+
+        expect(getAllDebitCardTransactions[0]).toBe(undefined);
     });
 });
