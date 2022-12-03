@@ -72,11 +72,9 @@ export class TransactionController {
         });
     }
 
-    // FAZER TESTE Integrado na Rota !!!!!!!!
     static async showAllAccountTransactions(req: Request, res: Response): Promise<Response> {
         const { id } = req.JWT;
 
-        // FAZER Teste dessa Função lá do Utils !!!
         const showAllAccountTransactions = await TransactionUtils.getAllAccountTransactions(id);
 
         return res.json({
@@ -85,11 +83,9 @@ export class TransactionController {
         });
     }
 
-    // FAZER TESTE Integrado na Rota !!!!!!!!!
     static async showAllCreditCardTransactions(req: Request, res: Response): Promise<Response> {
         const { id } = req.JWT;
 
-        // FAZER Teste dessa Função lá do Utils !!!
         const showAllAccountTransactions = await TransactionUtils.getAllCreditCardTransactions(id);
 
         return res.json({
@@ -98,11 +94,9 @@ export class TransactionController {
         });
     }
 
-    // FAZER TESTE Integrado na Rota !!!!!!!!!
     static async showAllDebitCardTransactions(req: Request, res: Response): Promise<Response> {
         const { id } = req.JWT;
 
-        // FAZER Teste dessa Função lá do Utils !!!
         const showAllDebitCardTransactions = await TransactionUtils.getAllDebitCardTransactions(id);
 
         return res.json({

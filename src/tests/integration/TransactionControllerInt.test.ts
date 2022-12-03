@@ -48,6 +48,7 @@ const showRoutes = async (urlRoute: string, JWT: string): Promise<request.Respon
 const routeTransactionURL = '/api/transaction';
 const routeShowAllAccountTransactions = '/api/transaction';
 const routeShowAllCreditCardTransactions = '/api/transaction/credit-card';
+const routeShowAllDebitCardTransactions = '/api/transaction/debit-card';
 const TEST_CARD_NUMBER = process.env.TEST_CARD_NUMBER as string;
 const TEST_CARD_EXPIRATION_DATE = process.env.TEST_CARD_EXPIRATION_DATE as string;
 const TEST_CARD_CVV = Number(process.env.TEST_CARD_CVV);
@@ -104,7 +105,18 @@ describe('Transaction Controller Integration Test', () => {
 
     it('Should NOT be possible to show all credit card transactions', async () => {
         const getRouteResponse = await showRoutes(routeShowAllCreditCardTransactions, 'invalid_jwt');
-        console.log('getRouteResponse allCredit... ERROR:', getRouteResponse);
+
+        expect(getRouteResponse.statusCode).toBe(StatusCodes.UNAUTHORIZED);
+    });
+
+    it('Should be possible to show all debit card transactions', async () => {
+        const getRouteResponse = await showRoutes(routeShowAllDebitCardTransactions, await getJWT());
+
+        expect(getRouteResponse.statusCode).toBe(200);
+    });
+
+    it('Should NOT be possible to show all debit card transactions', async () => {
+        const getRouteResponse = await showRoutes(routeShowAllDebitCardTransactions, 'invalid_jwt');
 
         expect(getRouteResponse.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     });
