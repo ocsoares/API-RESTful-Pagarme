@@ -95,4 +95,17 @@ describe('Transaction Controller Integration Test', () => {
 
         expect(getRouteResponse.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     });
+
+    it('Should be possible to show all credit card transactions', async () => {
+        const getRouteResponse = await showRoutes(routeShowAllCreditCardTransactions, await getJWT());
+
+        expect(getRouteResponse.statusCode).toBe(200);
+    });
+
+    it('Should NOT be possible to show all credit card transactions', async () => {
+        const getRouteResponse = await showRoutes(routeShowAllCreditCardTransactions, 'invalid_jwt');
+        console.log('getRouteResponse allCredit... ERROR:', getRouteResponse);
+
+        expect(getRouteResponse.statusCode).toBe(StatusCodes.UNAUTHORIZED);
+    });
 });
