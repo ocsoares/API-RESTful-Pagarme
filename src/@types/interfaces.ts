@@ -39,12 +39,6 @@ export interface IPayableModel {
     transfer_id: string;
 }
 
-// SE PA Apagar !!!!!!!! <<<<<<
-export interface IBalanceModel {
-    available: string[];
-    waiting_funds: string[];
-}
-
 export interface IMainTransferInformation {
     transfer_amount: number;
     transfer_date: string;
