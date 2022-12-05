@@ -7,6 +7,7 @@ const authRoute = Router();
 
 authRoute.post('/auth/register', authRegisterValidation(), handleValidation, AuthController.register);
 
-authRoute.get('/auth/login', authLoginValidation(), handleValidation, AuthController.login);
+// Tive que mudar de Get para Post por causa do Swagger (não aceita body em get) !! <<
+authRoute.post('/auth/login', authLoginValidation(), handleValidation, AuthController.login);
 
 export default authRoute;

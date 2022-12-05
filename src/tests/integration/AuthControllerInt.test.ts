@@ -16,11 +16,11 @@ const registerPost = async (urlRoute: string, username: string,
     return getResponse;
 };
 
-const loginGet = async (urlRoute: string, username: string,
+const loginPost = async (urlRoute: string, username: string,
     password: string
 ): Promise<request.Response> => {
 
-    const getResponse = await request(app).get(urlRoute).send(<IUserAccount>{
+    const getResponse = await request(app).post(urlRoute).send(<IUserAccount>{
         username,
         password
     });
@@ -55,7 +55,7 @@ describe("AuthController Integration Test", () => {
     });
 
     it('Should be possible to login', async () => {
-        const getResponse = await loginGet(loginURLRoute, TEST_USERNAME,
+        const getResponse = await loginPost(loginURLRoute, TEST_USERNAME,
             TEST_PASSWORD
         );
 
@@ -63,7 +63,7 @@ describe("AuthController Integration Test", () => {
     });
 
     it('Should NOT be possible to login', async () => {
-        const getResponse = await loginGet(loginURLRoute, TEST_USERNAME,
+        const getResponse = await loginPost(loginURLRoute, TEST_USERNAME,
             'wrongpassword12'
         );
 
