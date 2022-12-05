@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { BadRequestAPIError, UnauthorizedAPIError } from '../helpers/ErrorAPIHelper';
+import { UnauthorizedAPIError } from '../helpers/ErrorAPIHelper';
 import { UserModel } from '../models/UserModel';
 import { AuthUtils } from '../utils/AuthUtils';
 
@@ -11,7 +11,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     const { authorization }: IAuthorizationToken = req.headers as any;
 
     if (!authorization) {
-        throw new BadRequestAPIError('Insira um token válido no authorization !');
+        throw new UnauthorizedAPIError('Token inválido ou expirado !');
     }
 
     const [, token] = authorization.split(' ');

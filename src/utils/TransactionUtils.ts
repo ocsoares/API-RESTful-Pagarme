@@ -94,7 +94,7 @@ export class TransactionUtils {
 
         const mainAccountTransactionsInformation = getAllAccountTransactions.map(prop => (<IMainTransactionInformation>{
             transfer_amount: prop.transfer_amount,
-            payment_date: prop.transfer_amount.toLocaleString('pt-BR'),
+            payment_date: prop.payment_date.toLocaleString('pt-BR'),
             description: prop.description,
             status: prop.status
         }));

@@ -1,4 +1,5 @@
 import { OpenAPIV3 } from 'openapi-types';
+import { ITransaction } from './@types/interfaces';
 
 export const swaggerJSON: OpenAPIV3.Document = {
     openapi: '3.0.0',
@@ -23,7 +24,7 @@ export const swaggerJSON: OpenAPIV3.Document = {
                     content: {
                         "application/json": {
                             schema: {
-                                $ref: "#/components/schemas/RegisterSchema"
+                                $ref: "#/components/schemas/Register"
                             },
                             examples: {
                                 register: {
@@ -46,7 +47,7 @@ export const swaggerJSON: OpenAPIV3.Document = {
                         content: {
                             "application/json": {
                                 schema: {
-                                    $ref: '#/components/schemas/CreatedAccountSchema'
+                                    $ref: '#/components/schemas/CreatedAccount'
                                 }
                             }
                         }
@@ -75,8 +76,8 @@ export const swaggerJSON: OpenAPIV3.Document = {
                             examples: {
                                 login: {
                                     value: {
-                                        username: 'Pedro',
-                                        password: 'pedro12'
+                                        username: 'Hugo Pereira',
+                                        password: 'hugo123'
                                     }
                                 }
                             }
@@ -107,11 +108,146 @@ export const swaggerJSON: OpenAPIV3.Document = {
                     }
                 }
             }
+        },
+        "/api/transaction": {
+            post: {
+                summary: 'Fazer uma transação bancária',
+                description: 'Rota para realizar transações bancárias',
+                tags: ['Transaction'],
+                security: [{ bearerAuth: [] }],
+                requestBody: {
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/schemas/TransactionBody'
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    400: {
+                        description: 'Preencha corretamente o body'
+                    },
+                    401: {
+                        description: 'Token inválido ou expirado !'
+                    },
+                    202: {
+                        description: 'Transaction done !',
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    $ref: '#/components/schemas/TransactionBody'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            get: {
+                summary: 'Mostrar todas as transações feitas',
+                description: 'Rota para mostrar todas as transações feitas em uma conta',
+                tags: ['Transaction'],
+                security: [{ bearerAuth: [] }],
+                responses: {
+                    401: {
+                        description: 'Token inválido ou expirado !'
+                    },
+                    200: {
+                        description: 'Your transactions have been found !',
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    properties: {
+                                        message: {
+                                            type: 'string',
+                                            default: 'Your transactions have been found !'
+                                        },
+                                        transactions: {
+                                            type: 'array',
+                                            items: {
+                                                $ref: '#/components/schemas/TransactionInformation'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/credit-card": {
+            get: {
+                summary: 'Mostrar todas as transações feitas com o cartão de crédito',
+                description: 'Rota para mostrar todas as transações feitas com o cartão de crédito em uma conta',
+                tags: ['Transaction'],
+                security: [{ bearerAuth: [] }],
+                responses: {
+                    401: {
+                        description: 'Token inválido ou expirado !'
+                    },
+                    200: {
+                        description: 'Your credit card transactions have been found !',
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    properties: {
+                                        message: {
+                                            type: 'string',
+                                            default: 'Your credit card transactions have been found !'
+                                        },
+                                        transactions: {
+                                            type: 'array',
+                                            items: {
+                                                $ref: '#/components/schemas/CreditCardTransactionInformation'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/debit-card": {
+            get: {
+                summary: 'Mostrar todas as transações feitas com o cartão de débito',
+                description: 'Rota para mostrar todas as transações feitas com o cartão de débito em uma conta',
+                tags: ['Transaction'],
+                security: [{ bearerAuth: [] }],
+                responses: {
+                    401: {
+                        description: 'Token inválido ou expirado !'
+                    },
+                    200: {
+                        description: 'Your debit card transactions have been found !',
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    properties: {
+                                        message: {
+                                            type: 'string',
+                                            default: 'Your debit card transactions have been found !'
+                                        },
+                                        transactions: {
+                                            type: 'array',
+                                            items: {
+                                                $ref: '#/components/schemas/DebitCardTransactionInformation'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     components: {
         schemas: {
-            RegisterSchema: {
+            Register: {
                 type: 'object',
                 properties: {
                     username: {
@@ -125,7 +261,7 @@ export const swaggerJSON: OpenAPIV3.Document = {
                     }
                 }
             },
-            CreatedAccountSchema: {
+            CreatedAccount: {
                 type: 'object',
                 properties: {
                     message: {
@@ -144,6 +280,130 @@ export const swaggerJSON: OpenAPIV3.Document = {
                         }
                     }
                 }
+            },
+            TransactionBody: {
+                type: 'object',
+                properties: {
+                    transfer_amount: {
+                        type: 'number'
+                    },
+                    description: {
+                        type: 'string'
+                    },
+                    payment_method: {
+                        type: 'string',
+                        description: 'credit_card or debit_card'
+                    },
+                    card_number: {
+                        type: 'string'
+                    },
+                    card_holder: {
+                        type: 'string'
+                    },
+                    card_expiration_date: {
+                        type: 'string'
+                    },
+                    cvv: {
+                        type: 'number'
+                    }
+                }
+            },
+            TransactionDone: {
+                type: 'object',
+                properties: {
+                    message: {
+                        type: 'string',
+                        default: 'Transaction done !'
+                    },
+                    new_transfer: {
+                        type: 'object',
+                        properties: {
+                            transfer_amount: {
+                                type: 'number'
+                            },
+                            transfer_date: {
+                                type: 'string'
+                            },
+                            description: {
+                                type: 'string'
+                            },
+                            payment_method: {
+                                type: 'string',
+                                description: 'credit_card or debit_card'
+                            },
+                            card_number: {
+                                type: 'string'
+                            },
+                            card_holder: {
+                                type: 'string'
+                            },
+                            card_expiration_date: {
+                                type: 'string'
+                            }
+                        }
+                    }
+                }
+            },
+            TransactionInformation: {
+                type: 'object',
+                properties: {
+                    transfer_amount: {
+                        type: 'number'
+                    },
+                    payment_date: {
+                        type: 'string'
+                    },
+                    description: {
+                        type: 'string'
+                    },
+                    status: {
+                        type: 'string',
+                        description: 'paid or waiting_funds'
+                    }
+                }
+            },
+            CreditCardTransactionInformation: {
+                type: 'object',
+                properties: {
+                    transfer_amount: {
+                        type: 'number'
+                    },
+                    payment_date: {
+                        type: 'string'
+                    },
+                    description: {
+                        type: 'string'
+                    },
+                    status: {
+                        type: 'string',
+                        default: 'waiting_funds'
+                    }
+                }
+            },
+            DebitCardTransactionInformation: {
+                type: 'object',
+                properties: {
+                    transfer_amount: {
+                        type: 'number'
+                    },
+                    payment_date: {
+                        type: 'string'
+                    },
+                    description: {
+                        type: 'string'
+                    },
+                    status: {
+                        type: 'string',
+                        default: 'paid'
+                    }
+                }
+            }
+        },
+        securitySchemes: {
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT'
             }
         }
     }
