@@ -19,6 +19,7 @@ export const swaggerJSON: OpenAPIV3.Document = {
                 description: 'Rota para o cadastro de contas para que consiga gerar um token válido',
                 tags: ['Authentication'],
                 requestBody: {
+                    description: 'Dados necessários para o cadastro de uma conta',
                     content: {
                         "application/json": {
                             schema: {
@@ -59,6 +60,7 @@ export const swaggerJSON: OpenAPIV3.Document = {
                 description: 'Rota para o login de contas para conseguir o acesso a um token válido',
                 tags: ['Authentication'],
                 requestBody: {
+                    description: 'Dados necessários para o login de uma conta',
                     content: {
                         "application/json": {
                             schema: {
@@ -114,6 +116,7 @@ export const swaggerJSON: OpenAPIV3.Document = {
                 tags: ['Transaction'],
                 security: [{ bearerAuth: [] }],
                 requestBody: {
+                    description: 'Dados necessários para fazer uma transação bancária',
                     content: {
                         "application/json": {
                             schema: {
@@ -399,6 +402,7 @@ export const swaggerJSON: OpenAPIV3.Document = {
         },
         securitySchemes: {
             bearerAuth: {
+                description: 'Autenticação nas rotas protegidas utilizando JWT',
                 type: 'http',
                 scheme: 'bearer',
                 bearerFormat: 'JWT'

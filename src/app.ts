@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import 'express-async-errors';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import morganMiddleware from './middleware/validation/morganMiddleware';
 import { errorAPIMiddleware, pageNotFound } from './middleware/errorAPIMiddleware';
@@ -18,6 +18,10 @@ app.use(express.json());
 app.use(cors());
 
 app.use(morganMiddleware);
+
+app.get('/', (req: Request, res: Response): void => {
+    return res.redirect('/api/docs');
+});
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerJSON));
 
