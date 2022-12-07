@@ -1,6 +1,4 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { ITransaction } from './@types/interfaces';
-
 export const swaggerJSON: OpenAPIV3.Document = {
     openapi: '3.0.0',
 

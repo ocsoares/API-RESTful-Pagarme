@@ -7,7 +7,7 @@ import { errorAPIMiddleware, pageNotFound } from './middleware/errorAPIMiddlewar
 import authRoute from './routes/authRoute';
 import transactionRoute from './routes/transactionRoute';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerJSON } from './swagger';
+import { swaggerJSON } from './docs/swagger';
 
 // OBS: Tive que separar assim por causa dos Testes !!
 
