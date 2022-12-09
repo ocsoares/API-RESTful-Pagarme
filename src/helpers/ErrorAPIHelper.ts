@@ -11,7 +11,6 @@ export class ErrorAPIHelper extends Error {
     }
 }
 
-// FAZER um ENUM para as Strings válidas que podem ser passadas como Parâmetro !!
 export class BadRequestAPIError extends ErrorAPIHelper {
     constructor(message: BadRequestErrorMessages) {
         super(message, StatusCodes.BAD_REQUEST);
