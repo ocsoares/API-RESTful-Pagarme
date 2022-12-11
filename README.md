@@ -47,3 +47,5 @@ O projeto, resumidamente, consiste em uma **API RESTful** para transações banc
 - Bcrypt
 - Morgan
 - Winston
+- Jest
+- Supertest
