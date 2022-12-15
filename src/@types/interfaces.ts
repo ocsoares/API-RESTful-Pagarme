@@ -55,3 +55,8 @@ export interface IMainTransactionInformation {
     description: string;
     status: 'paid' | 'waiting_funds';
 }
+
+export interface IRefreshTokenModel {
+    _id?: string;
+    account_id: string;
+}

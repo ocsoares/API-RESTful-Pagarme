@@ -1,8 +1,9 @@
 import 'dotenv/config';
-import { IJWT, IUserAccount } from '../@types/interfaces';
+import { IJWT, IRefreshTokenModel, IUserAccount } from '../@types/interfaces';
 import { UserModel } from '../models/UserModel';
 import jwt from 'jsonwebtoken';
 import { staticInterfaceMethods } from './staticInterfaceMethodsUtils';
+import { RefreshTokenModel } from '../models/RefreshTokenModel';
 
 // const expiresIn = dayjs().add(15, 'second').unix(); // Unix transforma em NÚMERICO !!
 
@@ -11,6 +12,7 @@ interface IAuthUtilsMethods {
     searchUserByID(id: string): Promise<IUserAccount | false>;
     generateJWT(account: IUserAccount, hash: string, expiresIn: string): Promise<string>;
     checkJWT(token: string, JWT_key: string): IJWT | false;
+    generateRefreshTokenPermission(account_id: string): Promise<IRefreshTokenModel>;
 }
 
 // Needs to be static method of the interface !!
@@ -58,5 +60,15 @@ export class AuthUtils {
         catch (error: any) {
             return false;
         }
+    }
+
+    static async generateRefreshTokenPermission(account_id: string): Promise<IRefreshTokenModel> {
+        const generateRefreshTokenPermission = new RefreshTokenModel({
+            account_id: account_id
+        });
+
+        await generateRefreshTokenPermission.save();
+
+        return generateRefreshTokenPermission;
     }
 }
