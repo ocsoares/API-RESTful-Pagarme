@@ -100,6 +100,10 @@ export const swaggerJSON: OpenAPIV3.Document = {
                                         token: {
                                             type: 'string',
                                             description: 'Token to use in authenticated routes !'
+                                        },
+                                        refresh_token_permission: {
+                                            type: 'string',
+                                            description: 'To use to refresh token in refresh token route !'
                                         }
                                     }
                                 }
@@ -109,6 +113,52 @@ export const swaggerJSON: OpenAPIV3.Document = {
                 }
             }
         },
+        "/api/auth/refresh-token": {
+            post: {
+                summary: 'Gerar um novo token quando expirar',
+                description: 'Rota para gerar um novo token com maior duração quando o fornecido no login expirar',
+                tags: ['Authentication'],
+                requestBody: {
+                    description: 'Dados necessários para o refresh token',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                properties: {
+                                    refresh_token_permission: {
+                                        type: 'string',
+                                        description: 'Informação fornecida na rota de login !'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    401: {
+                        description: 'Token inválido ou expirado !'
+                    },
+                    200: {
+                        description: 'Refreshed token !',
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    properties: {
+                                        message: {
+                                            type: 'string'
+                                        },
+                                        token: {
+                                            type: 'string',
+                                            description: 'Refreshed token to use in authenticated routes !'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
         "/api/transaction": {
             post: {
                 summary: 'Fazer uma transação bancária',

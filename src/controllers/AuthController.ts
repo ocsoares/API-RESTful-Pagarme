@@ -103,6 +103,7 @@ export class AuthController {
             const JWT = await AuthUtils.generateJWT(userAccount, '10d');
 
             return res.json({
+                message: 'Refreshed token !',
                 token: JWT
             });
         }
