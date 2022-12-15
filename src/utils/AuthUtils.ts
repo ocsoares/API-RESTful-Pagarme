@@ -62,7 +62,7 @@ export class AuthUtils {
 
     static async generateRefreshTokenPermission(account_id: string): Promise<IRefreshTokenModel> {
         const generateRefreshTokenPermission = new RefreshTokenModel({
-            account_id: account_id
+            account_id
         });
 
         await generateRefreshTokenPermission.save();

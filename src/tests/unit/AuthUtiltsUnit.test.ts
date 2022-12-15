@@ -1,11 +1,18 @@
 import 'dotenv/config';
 import { AuthUtils } from "../../utils/AuthUtils";
 import { IUserAccount } from '../../@types/interfaces';
+import { RefreshTokenModel } from '../../models/RefreshTokenModel';
 
 const TEST_USERNAME = process.env.TEST_USERNAME as string;
 const TEST_PASSWORD = process.env.TEST_PASSWORD as string;
 const JWT_NOT_EXPIRE = process.env.JWT_NOT_EXPIRE as string;
 const JWT_HASH = process.env.JWT_HASH as string;
+
+const searchTesteUser = async (): Promise<IUserAccount> => {
+    const searchUser = await AuthUtils.searchUserByUsername(TEST_USERNAME) as IUserAccount;
+
+    return searchUser;
+};
 
 describe('Auth Utils Unit Test', () => {
 
@@ -34,6 +41,15 @@ describe('Auth Utils Unit Test', () => {
         const checkJWT = AuthUtils.checkJWT('anyjwt', JWT_HASH);
 
         expect(checkJWT).toBe(false);
+    });
+
+    it('Should be possible to generate a refresh token permission', async () => {
+        const getTestUser = await searchTesteUser();
+
+        // Coloquei um ID aleatório pq no LOGIN do Teste JÁ CRIA automaticamente com o ID dessa conta abaixo !!! <<<
+        const generateRefreshTokenPermission = await AuthUtils.generateRefreshTokenPermission(getTestUser.id + '12');
+
+        expect(generateRefreshTokenPermission).toHaveProperty('account_id');
     });
 
 });
