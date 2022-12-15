@@ -10,8 +10,6 @@ authRoute.post('/auth/register', authRegisterValidation(), handleValidation, Aut
 
 // Tive que mudar de Get para Post por causa do Swagger (não aceita body em get) !! <<
 authRoute.post('/auth/login', authLoginValidation(), handleValidation, AuthController.login);
-
-// FAZER Rota de refresh token !!!!!
 authRoute.post('/auth/refresh-token', authRefreshTokenValidation(), handleValidation, AuthController.refreshToken);
 
 export default authRoute;

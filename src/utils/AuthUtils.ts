@@ -5,8 +5,6 @@ import jwt from 'jsonwebtoken';
 import { staticInterfaceMethods } from './staticInterfaceMethodsUtils';
 import { RefreshTokenModel } from '../models/RefreshTokenModel';
 
-// const expiresIn = dayjs().add(15, 'second').unix(); // Unix transforma em NÚMERICO !!
-
 interface IAuthUtilsMethods {
     searchUserByUsername(username: string): Promise<IUserAccount | false>;
     searchUserByID(id: string): Promise<IUserAccount | false>;
