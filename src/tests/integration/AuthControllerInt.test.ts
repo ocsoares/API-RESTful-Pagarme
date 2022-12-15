@@ -2,6 +2,7 @@ import { app } from "../../app";
 import request from 'supertest';
 import { IUserAccount } from '../../@types/interfaces';
 import { BadRequestErrorMessages } from '../../@types/errorAPIMessages';
+import { RefreshTokenModel } from "../../models/RefreshTokenModel";
 
 const registerPost = async (urlRoute: string, username: string,
     password: string, confirm_password: string
@@ -59,7 +60,11 @@ describe("AuthController Integration Test", () => {
             TEST_PASSWORD
         );
 
+        const refreshTokenPermissionResponse = getResponse.body.refresh_token_permission as string;
+        const searchRefreshTokenPermission = await RefreshTokenModel.findById(refreshTokenPermissionResponse);
+
         expect(getResponse.statusCode).toBe(200);
+        expect(searchRefreshTokenPermission).toHaveProperty('account_id');
     });
 
     it('Should NOT be possible to login', async () => {
