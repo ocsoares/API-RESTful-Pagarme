@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import { AuthUtils } from "../../utils/AuthUtils";
 import { IUserAccount } from '../../@types/interfaces';
-import { RefreshTokenModel } from '../../models/RefreshTokenModel';
 
 const TEST_USERNAME = process.env.TEST_USERNAME as string;
 const TEST_PASSWORD = process.env.TEST_PASSWORD as string;

@@ -90,7 +90,6 @@ describe("AuthController Integration Test", () => {
 
     it('Should be possible to refresh a token', async () => {
         const getAnyRefreshTokenPermission = await RefreshTokenModel.find();
-        console.log(getAnyRefreshTokenPermission);
 
         const getResponse = await refreshTokenPostRoute(refreshTokenURLRoute, getAnyRefreshTokenPermission[0]._id);
 
