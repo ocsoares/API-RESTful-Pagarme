@@ -4,7 +4,7 @@ import { IUserAccount } from '../../@types/interfaces';
 import { BadRequestErrorMessages } from '../../@types/errorAPIMessages';
 import { RefreshTokenModel } from "../../models/RefreshTokenModel";
 
-const registerPost = async (urlRoute: string, username: string,
+const registerPostRoute = async (urlRoute: string, username: string,
     password: string, confirm_password: string
 ): Promise<request.Response> => {
 
@@ -17,7 +17,7 @@ const registerPost = async (urlRoute: string, username: string,
     return getResponse;
 };
 
-const loginPost = async (urlRoute: string, username: string,
+const loginPostRoute = async (urlRoute: string, username: string,
     password: string
 ): Promise<request.Response> => {
 
@@ -29,22 +29,35 @@ const loginPost = async (urlRoute: string, username: string,
     return getResponse;
 };
 
+const refreshTokenPostRoute = async (urlRoute: string,
+    refresh_token_permission: string
+): Promise<request.Response> => {
+
+    const getResponse = await request(app).post(urlRoute).send({
+        refresh_token_permission
+    });
+
+    return getResponse;
+
+};
+
 const registerURLRoute = '/api/auth/register';
 const loginURLRoute = '/api/auth/login';
+const refreshTokenURLRoute = '/api/auth/refresh-token';
 const TEST_USERNAME = process.env.TEST_USERNAME as string;
 const TEST_PASSWORD = process.env.TEST_PASSWORD as string;
 
 describe("AuthController Integration Test", () => {
 
     it("Should be possible to create a new user", async () => {
-        const getResponse = await registerPost(registerURLRoute, TEST_USERNAME,
+        const getResponse = await registerPostRoute(registerURLRoute, TEST_USERNAME,
             TEST_PASSWORD, TEST_PASSWORD);
 
         expect(getResponse.statusCode).toBe(201);
     });
 
     it('Should NOT be possible to create a new user', async () => {
-        const getResponse = await registerPost(registerURLRoute,
+        const getResponse = await registerPostRoute(registerURLRoute,
             TEST_USERNAME, 'anypassword12', 'anypassword12');
 
         const errorJSON = JSON.parse(getResponse.text);
@@ -56,7 +69,7 @@ describe("AuthController Integration Test", () => {
     });
 
     it('Should be possible to login', async () => {
-        const getResponse = await loginPost(loginURLRoute, TEST_USERNAME,
+        const getResponse = await loginPostRoute(loginURLRoute, TEST_USERNAME,
             TEST_PASSWORD
         );
 
@@ -68,11 +81,26 @@ describe("AuthController Integration Test", () => {
     });
 
     it('Should NOT be possible to login', async () => {
-        const getResponse = await loginPost(loginURLRoute, TEST_USERNAME,
+        const getResponse = await loginPostRoute(loginURLRoute, TEST_USERNAME,
             'wrongpassword12'
         );
 
         expect(getResponse.statusCode).toBe(400);
+    });
+
+    it('Should be possible to refresh a token', async () => {
+        const getAnyRefreshTokenPermission = await RefreshTokenModel.find();
+        console.log(getAnyRefreshTokenPermission);
+
+        const getResponse = await refreshTokenPostRoute(refreshTokenURLRoute, getAnyRefreshTokenPermission[0]._id);
+
+        expect(getResponse.statusCode).toBe(200);
+    });
+
+    it('Should be NOT possible to refresh a token', async () => {
+        const getResponse = await refreshTokenPostRoute(refreshTokenURLRoute, 'any_id');
+
+        expect(getResponse.statusCode).toBe(401);
     });
 
 });

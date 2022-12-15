@@ -102,6 +102,9 @@ export class AuthController {
 
             const JWT = await AuthUtils.generateJWT(userAccount, '10d');
 
+            // After generate a refresh token, delete the used permission to prevent generating infinite refresh tokens !
+            await RefreshTokenModel.findByIdAndDelete(refresh_token_permission);
+
             return res.json({
                 message: 'Refreshed token !',
                 token: JWT
